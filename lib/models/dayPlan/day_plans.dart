@@ -1,6 +1,8 @@
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:grassroots_app/models/json/day_plan.dart';
+import 'package:grassroots_app/models/json/day_plans.dart';
+import 'package:grassroots_app/services/jsonService/json_decode_service.dart';
 import 'package:grassroots_app/models/dayPlan/day_plan.dart';
 
 class DayPlans {
@@ -9,6 +11,7 @@ class DayPlans {
 
   List<DayPlan?>? dayPlansList = [];
 
+  DateTime? get dayOfPlans => _dayOfPlans!;
   DateTime? _dayOfPlans;
 
   Future<void> addDayPlan({
@@ -36,8 +39,12 @@ class DayPlans {
   Future<void> deleteDayPlanByDayPlan({
     required DayPlan? dayPlanToDelete,
   }) async {
-    dayPlansList!.remove(
-      dayPlanToDelete,
+    dayPlansList!.removeWhere(
+      (
+        DayPlan? dayPlan,
+      ) =>
+          dayPlan!.title == dayPlanToDelete!.title &&
+          dayPlan.isComplete == dayPlanToDelete.isComplete,
     );
   }
 
@@ -81,57 +88,50 @@ class DayPlans {
           );
   }
 
-  Map<String?, dynamic>? toJson() {
-    List<Map<String?, dynamic>?>? dayPlansListConverted = dayPlansList!
-        .map(
-          (
-            DayPlan? dayPlanFromList,
-          ) =>
-              dayPlanFromList!.toJson(),
-        )
-        .toList();
-
-    return {
-      'id': _id,
-      'dayPlansList': dayPlansListConverted,
-      'dayOfPlans': _dayOfPlans!.toIso8601String(),
-    };
-  }
+  Map<String?, dynamic>? toJson() => {
+        'id': _id,
+        'dayPlansList': dayPlansList!
+            .map(
+              (
+                DayPlan? dayPlanFromList,
+              ) =>
+                  dayPlanFromList!.toJson(),
+            )
+            .toList(),
+        'dayOfPlans': _dayOfPlans!.toIso8601String(),
+      };
 
   static Future<DayPlans> fromDateOfPlans({
     required DateTime? dateOfPlans,
   }) async {
-    Map<String?, dynamic>? json;
+    JsonDayPlans? jsonDayPlans;
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // await SharedPreferences.getInstance().then(
-    //   (
-    //     SharedPreferences? prefs,
-    //   ) async {
-    //     json = jsonDecode(
-    //       prefs!.getString(
-    //         'dateOfPlans${dateOfPlans!.year}${dateOfPlans.month}${dateOfPlans.day}',
-    //       )!,
-    //     );
-    //   },
-    // );
-
-    final jsonString = prefs.getString(
-      'dateOfPlans${dateOfPlans!.year}${dateOfPlans.month}${dateOfPlans.day}',
+    await SharedPreferences.getInstance().then(
+      (
+        SharedPreferences? prefs,
+      ) async {
+        jsonDayPlans = await JsonDecodeService.decode(
+          prefs!.getString(
+            'dateOfPlans${dateOfPlans!.year}${dateOfPlans.month}${dateOfPlans.day}',
+          )!,
+        );
+      },
     );
 
-    if (jsonString != null) {
-      json = jsonDecode(
-        jsonString,
-      );
-
-      return DayPlans.fromJson(
-        json!,
-      );
-    }
-
-    return DayPlans();
+    return DayPlans.fromJson(
+      {
+        'id': jsonDayPlans?.id,
+        'dayPlansList': jsonDayPlans?.dayPlansList!
+            .map(
+              (
+                JsonDayPlan? jsonDayPlan,
+              ) =>
+                  jsonDayPlan!.toJson(),
+            )
+            .toList(),
+        'dayOfPlans': jsonDayPlans?.dayOfPlans!,
+      },
+    );
   }
 
   factory DayPlans.fromJson(
@@ -139,25 +139,42 @@ class DayPlans {
   ) {
     List<DayPlan?>? dayPlansList = [];
 
-    // TODO: fix dynamic dayPlanFromList to Map<String?, dynamic>? dayPlanFromList
-
     if (json?['dayPlansList'] != null && json?['dayPlansList'].length > 0) {
-      json?['dayPlansList'].forEach(
-        (
-          Map<String?, dynamic>? dayPlanFromList,
-        ) =>
-            dayPlansList.add(
+      for (int i = 0; i < json?['dayPlansList']!.length; i++) {
+        if (json?['dayPlansList'][i].runtimeType == JsonDayPlan) {
+          json?['dayPlansList'][i] = {
+            'id': json['dayPlansList'][i].id,
+            'title': json['dayPlansList'][i].title,
+            'isComplete': json['dayPlansList'][i].isComplete,
+          };
+        }
+
+        dayPlansList.add(
           DayPlan.fromJson(
-            dayPlanFromList,
+            {
+              'id': json?['dayPlansList'][i]['id'],
+              'title': json?['dayPlansList'][i]['title'],
+              'isComplete': json?['dayPlansList'][i]['isComplete'],
+            },
           ),
-        ),
-      );
+        );
+      }
     }
 
     final DayPlans dayPlans = DayPlans(
-      dayOfPlans: DateTime.parse(
-        json?['dayOfPlans'],
-      ),
+      dayOfPlans: () {
+        if (json?['dayOfPlans'].runtimeType == String) {
+          return DateTime.parse(
+            json?['dayOfPlans'],
+          );
+        } else {
+          return DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          );
+        }
+      }(),
     );
 
     for (DayPlan? dayPlan in dayPlansList) {

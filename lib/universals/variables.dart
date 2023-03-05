@@ -7,8 +7,10 @@ ThemeMode? appThemeMode = ThemeMode.system;
 
 TargetPlatform? appTargetPlatform = TargetPlatform.android;
 
-int? appThemeSettingsInt = 0;
+int? appThemeSettingsInt = 2;
 
-ThemeModeNotifier? globalThemeModeNotifier;
+ThemeModeNotifierService? globalThemeModeNotifier;
 
-DayPlans globalDayPlans = DayPlans();
+DayPlans? globalDayPlans;
+
+List<DateTime?>? dayPlanDates = [];

@@ -17,7 +17,7 @@ class GrassrootsSignUp extends StatefulWidget {
 }
 
 class _GrassrootsSignUpState extends State<GrassrootsSignUp> {
-  GlobalKey<FormState>? formKey = GlobalKey<FormState>();
+  GlobalKey<FormState>? signUpFormKey = GlobalKey<FormState>();
 
   bool? passwordObscure = true;
   bool? confirmPasswordObscure = true;
@@ -92,7 +92,7 @@ class _GrassrootsSignUpState extends State<GrassrootsSignUp> {
                     Expanded(
                       flex: 8,
                       child: Form(
-                        key: formKey,
+                        key: signUpFormKey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -251,7 +251,8 @@ class _GrassrootsSignUpState extends State<GrassrootsSignUp> {
                                 child: Material(
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      if (formKey!.currentState!.validate()) {
+                                      if (signUpFormKey!.currentState!
+                                          .validate()) {
                                         try {
                                           showDialog(
                                             context: context!,
@@ -319,7 +320,8 @@ class _GrassrootsSignUpState extends State<GrassrootsSignUp> {
                                             () {
                                               error = firebaseAuthException;
 
-                                              formKey!.currentState!.validate();
+                                              signUpFormKey!.currentState!
+                                                  .validate();
                                             },
                                           );
                                         }

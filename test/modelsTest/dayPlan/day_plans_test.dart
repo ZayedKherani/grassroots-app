@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:grassroots_app/models/dayPlan/day_plan.dart';
 import 'package:grassroots_app/models/dayPlan/day_plans.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:grassroots_app/services/jsonService/json_encode_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +54,7 @@ void main() {
                   'dayPlansList': [
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan',
+                      'title': 'Test Day Plan',
                       'isComplete': false,
                     },
                   ],
@@ -84,12 +85,12 @@ void main() {
                   'dayPlansList': [
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan',
+                      'title': 'Test Day Plan',
                       'isComplete': false,
                     },
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan 2',
+                      'title': 'Test Day Plan 2',
                       'isComplete': false,
                     },
                   ],
@@ -151,7 +152,7 @@ void main() {
                   'dayPlansList': [
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan',
+                      'title': 'Test Day Plan',
                       'isComplete': false,
                     },
                   ],
@@ -182,12 +183,12 @@ void main() {
                   'dayPlansList': [
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan',
+                      'title': 'Test Day Plan',
                       'isComplete': false,
                     },
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan 2',
+                      'title': 'Test Day Plan 2',
                       'isComplete': false,
                     },
                   ],
@@ -259,7 +260,7 @@ void main() {
                 'dayPlansList': [
                   {
                     'id': null,
-                    'dayPlanName': 'Test Day Plan',
+                    'title': 'Test Day Plan',
                     'isComplete': false,
                   }
                 ],
@@ -297,12 +298,12 @@ void main() {
                 'dayPlansList': [
                   {
                     'id': null,
-                    'dayPlanName': 'Test Day Plan',
+                    'title': 'Test Day Plan',
                     'isComplete': false,
                   },
                   {
                     'id': null,
-                    'dayPlanName': 'Test Day Plan 2',
+                    'title': 'Test Day Plan 2',
                     'isComplete': false,
                   },
                 ],
@@ -319,18 +320,19 @@ void main() {
   group(
     'DayPlans.fromDateOfPlans',
     () {
+      
       test(
         'DayPlans.fromDateOfPlans with null DayPlan',
         () async {
           SharedPreferences.setMockInitialValues(
             {
               'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                  jsonEncode(
+                  (await JsonEncodeService.encode(
                 {
                   'id': null,
                   'dayOfPlans': DateTime.now().toIso8601String(),
                 },
-              ),
+              ))!,
             },
           );
 
@@ -393,31 +395,27 @@ void main() {
           SharedPreferences.setMockInitialValues(
             {
               'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                  jsonEncode(
+                  (await JsonEncodeService.encode(
                 {
                   'id': null,
-                  'dayPlansList': [
+                  'dayPlansList': <Map<String?, dynamic>?>[
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan',
+                      'title': 'Test Day Plan',
                       'isComplete': false,
                     },
                   ],
                   'dayOfPlans': DateTime.now().toIso8601String(),
                 },
-              ),
+              ))!,
             },
           );
 
           expect(
-            await DayPlans.fromDateOfPlans(
+            (await DayPlans.fromDateOfPlans(
               dateOfPlans: DateTime.now(),
-            ).then(
-              (
-                DayPlans? dayPlansActual,
-              ) =>
-                  dayPlansActual!.toJson(),
-            ),
+            ))
+                .toJson(),
             dayPlans.toJson(),
           );
         },
@@ -445,24 +443,24 @@ void main() {
           SharedPreferences.setMockInitialValues(
             {
               'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                  jsonEncode(
+                  (await JsonEncodeService.encode(
                 {
                   'id': null,
                   'dayPlansList': [
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan',
+                      'title': 'Test Day Plan',
                       'isComplete': false,
                     },
                     {
                       'id': null,
-                      'dayPlanName': 'Test Day Plan 2',
+                      'title': 'Test Day Plan 2',
                       'isComplete': false,
                     },
                   ],
                   'dayOfPlans': DateTime.now().toIso8601String(),
                 },
-              ),
+              ))!,
             },
           );
 

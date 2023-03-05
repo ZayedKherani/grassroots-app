@@ -1,11 +1,11 @@
-class DayPlan {
-  String get id => _id!;
+class JsonDayPlan {
+  String? get id => _id;
   String? _id;
 
   String? title;
   bool? isComplete = false;
 
-  DayPlan({
+  JsonDayPlan({
     String? id,
     required this.title,
     required this.isComplete,
@@ -19,16 +19,16 @@ class DayPlan {
         'isComplete': isComplete,
       };
 
-  factory DayPlan.fromJson(
+  factory JsonDayPlan.fromJson(
     Map<String?, dynamic>? json,
   ) {
-    final DayPlan dayPlan = DayPlan(
+    final JsonDayPlan jsonDayPlan = JsonDayPlan(
       title: json?['title'],
       isComplete: json?['isComplete'],
     );
 
-    dayPlan._id = json?['id'];
+    jsonDayPlan._id = json?['id'];
 
-    return dayPlan;
+    return jsonDayPlan;
   }
 }

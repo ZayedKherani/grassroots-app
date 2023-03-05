@@ -1,17 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:grassroots_app/models/dayPlan/day_plan.dart';
+import 'package:grassroots_app/models/json/day_plan.dart';
 
 void main() {
   test(
-    'DayPlan toJson',
-    () {
-      final DayPlan dayPlan = DayPlan(
+    'JsonDayPlan toJson',
+    () async {
+      final JsonDayPlan jsonDayPlan = JsonDayPlan(
         title: 'Test Day Plan',
         isComplete: false,
       );
 
-      final Map<String?, dynamic>? json = dayPlan.toJson();
+      final Map<String?, dynamic>? json = jsonDayPlan.toJson();
 
       expect(
         json,
@@ -25,21 +25,21 @@ void main() {
   );
 
   test(
-    'DayPlan fromJson',
-    () {
+    'JsonDayPlan fromJson',
+    () async {
       final Map<String?, dynamic> json = {
         'id': '123',
         'title': 'Test Day Plan',
         'isComplete': false,
       };
 
-      final DayPlan dayPlan = DayPlan.fromJson(
+      final JsonDayPlan jsonDayPlan = JsonDayPlan.fromJson(
         json,
       );
 
-      expect(dayPlan.id, '123');
-      expect(dayPlan.title, 'Test Day Plan');
-      expect(dayPlan.isComplete, false);
+      expect(jsonDayPlan.id, '123');
+      expect(jsonDayPlan.title, 'Test Day Plan');
+      expect(jsonDayPlan.isComplete, false);
     },
   );
 }

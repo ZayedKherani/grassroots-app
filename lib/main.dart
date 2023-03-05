@@ -34,11 +34,11 @@ void main() async {
   );
 
   runApp(
-    ChangeNotifierProvider<ThemeModeNotifier>(
+    ChangeNotifierProvider<ThemeModeNotifierService>(
       create: (
         BuildContext? context,
       ) =>
-          ThemeModeNotifier(),
+          ThemeModeNotifierService(),
       child: const MyApp(),
     ),
   );
@@ -80,10 +80,10 @@ class MyAppState extends State<MyApp> {
   Widget build(
     BuildContext? context,
   ) {
-    return Consumer<ThemeModeNotifier>(
+    return Consumer<ThemeModeNotifierService>(
       builder: (
         BuildContext? context,
-        ThemeModeNotifier? theme,
+        ThemeModeNotifierService? theme,
         Widget? a,
       ) {
         globalThemeModeNotifier = theme;

@@ -17,7 +17,7 @@ class GrassrootsLogin extends StatefulWidget {
 }
 
 class _GrassrootsLoginState extends State<GrassrootsLogin> {
-  GlobalKey<FormState>? formKey = GlobalKey<FormState>();
+  GlobalKey<FormState>? logninFormKey = GlobalKey<FormState>();
   GlobalKey<FormState>? emailFormKey = GlobalKey<FormState>();
   GlobalKey<FormState>? resetPasswordFormKey = GlobalKey<FormState>();
 
@@ -90,7 +90,7 @@ class _GrassrootsLoginState extends State<GrassrootsLogin> {
                       Expanded(
                         flex: 8,
                         child: Form(
-                          key: formKey,
+                          key: logninFormKey,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +203,8 @@ class _GrassrootsLoginState extends State<GrassrootsLogin> {
                                   child: Material(
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        if (formKey!.currentState!.validate() &&
+                                        if (logninFormKey!.currentState!
+                                                .validate() &&
                                             emailFormKey!.currentState!
                                                 .validate()) {
                                           try {
@@ -251,7 +252,7 @@ class _GrassrootsLoginState extends State<GrassrootsLogin> {
                                               () {
                                                 error = firebaseAuthException;
 
-                                                formKey!.currentState!
+                                                logninFormKey!.currentState!
                                                     .validate();
                                                 emailFormKey!.currentState!
                                                     .validate();

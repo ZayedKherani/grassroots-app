@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:grassroots_app/universals/variables.dart';
 
-class ThemeModeNotifier with ChangeNotifier {
+class ThemeModeNotifierService with ChangeNotifier {
   ThemeMode? getThemeMode() {
     return appThemeMode;
   }
@@ -33,7 +33,7 @@ class ThemeModeNotifier with ChangeNotifier {
     );
   }
 
-  ThemeModeNotifier() {
+  ThemeModeNotifierService() {
     SharedPreferences.getInstance().then(
       (
         SharedPreferences? prefs,

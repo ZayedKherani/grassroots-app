@@ -269,6 +269,10 @@ class _GrassrootsSettingsState extends State<GrassrootsSettings> {
 
                             if (context.mounted) {}
 
+                            Navigator.pop(
+                              context,
+                            );
+
                             Navigator.pushReplacementNamed(
                               context,
                               '/welcome',
@@ -351,6 +355,10 @@ class _GrassrootsSettingsState extends State<GrassrootsSettings> {
                             AuthService().signOut();
 
                             if (context.mounted) {}
+
+                            Navigator.pop(
+                              context,
+                            );
 
                             Navigator.pushReplacementNamed(
                               context,

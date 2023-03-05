@@ -5,13 +5,22 @@ import 'package:google_sign_in/google_sign_in.dart';
 UserCredential? userCredential;
 
 class AuthService {
-  Future<UserCredential?>? signInWithGoogle() async {
+  Future<UserCredential?>? signInWithGoogle({
+    GoogleSignIn? alternateGoogleSignIn,
+    FirebaseAuth? alternateFirebaseAuth,
+  }) async {
     try {
-      GoogleSignInAccount? gUser = await GoogleSignIn(
-        scopes: [
-          'email',
-        ],
-      ).signIn();
+      GoogleSignInAccount? gUser;
+
+      if (alternateGoogleSignIn == null) {
+        gUser = await GoogleSignIn(
+          scopes: [
+            'email',
+          ],
+        ).signIn();
+      } else {
+        gUser = await alternateGoogleSignIn.signIn();
+      }
 
       final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 
@@ -20,9 +29,15 @@ class AuthService {
         idToken: gAuth.idToken,
       );
 
-      userCredential = await FirebaseAuth.instance.signInWithCredential(
-        gCredential,
-      );
+      if (alternateFirebaseAuth == null) {
+        userCredential = await FirebaseAuth.instance.signInWithCredential(
+          gCredential,
+        );
+      } else {
+        userCredential = await alternateFirebaseAuth.signInWithCredential(
+          gCredential,
+        );
+      }
 
       return userCredential;
     } on PlatformException {
@@ -30,11 +45,24 @@ class AuthService {
     }
   }
 
-  Future<void> signOut() async {
-    if (userCredential != null) {
-      await GoogleSignIn().signOut();
+  Future<UserCredential?> signOut({
+    GoogleSignIn? alternateGoogleSignIn,
+    UserCredential? alternateUserCredential,
+  }) async {
+    if (alternateUserCredential != null) {
+      return null;
     }
 
-    userCredential = null;
+    if (userCredential != null) {
+      if (alternateGoogleSignIn == null) {
+        await GoogleSignIn().signOut();
+      } else {}
+
+      userCredential = null;
+
+      return userCredential;
+    }
+
+    return null;
   }
 }
