@@ -19,6 +19,8 @@ import 'package:grassroots_app/pages/home/home.dart';
 import 'package:grassroots_app/pages/settings/settings.dart';
 
 import 'package:grassroots_app/pages/today/add_day_plan/add_day_plan.dart';
+import 'package:grassroots_app/pages/today/add_moods/add_moods.dart';
+import 'package:grassroots_app/pages/today/add_notes/add_notes.dart';
 
 import 'package:grassroots_app/services/themeModeNotifierService/theme_mode_notifier_service.dart';
 
@@ -133,6 +135,14 @@ class MyAppState extends State<MyApp> {
               BuildContext? context,
             ) =>
                 const GrassrootsTodayAddDayPlan(),
+            '/today/add_notes': (
+              BuildContext? context,
+            ) =>
+                const GrassrootsTodayAddNotes(),
+            '/today/add_moods': (
+              BuildContext? context,
+            ) =>
+                const GrassrootsTodayAddMoods(),
           },
         );
       },

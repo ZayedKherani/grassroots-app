@@ -51,43 +51,27 @@ class DayPlanService {
     String? id,
     DateTime? dateOfPlans,
   }) async {
-    if (dateOfPlans == null) {
-      if (title != null) {
-        await globalDayPlans!.deteleDayPlanByTitle(
-          title: title,
-        );
-      } else if (id != null) {
-        await globalDayPlans!.deleteDayPlanById(
-          id: id,
-        );
-      } else if (dayPlan != null) {
-        await globalDayPlans!.deleteDayPlanByDayPlan(
-          dayPlanToDelete: dayPlan,
-        );
-      }
+    DayPlans? dayPlans = dateOfPlans == null
+        ? globalDayPlans
+        : await DayPlans.fromDateOfPlans(
+            dateOfPlans: dateOfPlans,
+          );
 
-      return globalDayPlans;
-    } else {
-      DayPlans? dayPlans = await DayPlans.fromDateOfPlans(
-        dateOfPlans: dateOfPlans,
+    if (title != null) {
+      await dayPlans!.deteleDayPlanByTitle(
+        title: title,
       );
-
-      if (title != null) {
-        await dayPlans.deteleDayPlanByTitle(
-          title: title,
-        );
-      } else if (id != null) {
-        await dayPlans.deleteDayPlanById(
-          id: id,
-        );
-      } else if (dayPlan != null) {
-        await dayPlans.deleteDayPlanByDayPlan(
-          dayPlanToDelete: dayPlan,
-        );
-      }
-
-      return dayPlans;
+    } else if (id != null) {
+      await dayPlans!.deleteDayPlanById(
+        id: id,
+      );
+    } else if (dayPlan != null) {
+      await dayPlans!.deleteDayPlanByDayPlan(
+        dayPlanToDelete: dayPlan,
+      );
     }
+
+    return dayPlans;
   }
 
   static Future<void> toggleDayPlanCompletion({
@@ -107,6 +91,23 @@ class DayPlanService {
     }
   }
 
+  static Future<void> toggleDayPlanTodayExpansion({
+    required DayPlan? dayPlan,
+    DayPlans? dayPlans,
+  }) async {
+    if (dayPlans == null) {
+      await globalDayPlans!.updateDayPlan(
+        dayPlanToUpdate: dayPlan!,
+        isTodayExpanded: !dayPlan.isTodayExpanded!,
+      );
+    } else {
+      await dayPlans.updateDayPlan(
+        dayPlanToUpdate: dayPlan!,
+        isTodayExpanded: !dayPlan.isTodayExpanded!,
+      );
+    }
+  }
+
   static Future<void> writeDayPlansToStorage({
     DayPlans? dayPlans,
   }) async {
@@ -116,27 +117,31 @@ class DayPlanService {
 
     prefs.setString(
       'dateOfPlans${dayPlans!.dayOfPlans!.year}${dayPlans.dayOfPlans!.month}${dayPlans.dayOfPlans!.day}',
-      (await JsonEncodeService.encode(
+      (await JsonEncodeService.encodeDayPlans(
         dayPlans.toJson(),
       ))!,
     );
 
-    dayPlanDates!.add(
-      dayPlans.dayOfPlans,
-    );
+    if (dayPlanDates!.isEmpty || dayPlanDates!.last != dayPlans.dayOfPlans) {
+      dayPlanDates!.add(
+        dayPlans.dayOfPlans,
+      );
+    }
 
     prefs.setBool(
       'isDayPlanned',
-      true,
+      dayPlans.dayPlansList!.isNotEmpty,
     );
 
     prefs.setString(
       'isDayPlannedDateTime',
-      DateTime(
-        dayPlans.dayOfPlans!.year,
-        dayPlans.dayOfPlans!.month,
-        dayPlans.dayOfPlans!.day,
-      ).toIso8601String(),
+      dayPlans.dayPlansList!.isNotEmpty
+          ? DateTime(
+              dayPlans.dayOfPlans!.year,
+              dayPlans.dayOfPlans!.month,
+              dayPlans.dayOfPlans!.day,
+            ).toIso8601String()
+          : null.toString(),
     );
 
     List<String>? dayPlanDatesStrings = [];

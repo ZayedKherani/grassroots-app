@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grassroots_app/models/dayPlan/notes/notes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:grassroots_app/models/dayPlan/day_plan.dart';
@@ -15,7 +16,7 @@ void main() {
     'DayPlans.toJson',
     () {
       group(
-        'DayPlans_DateTime_Self_Create',
+        'Self Create',
         () {
           DayPlans? dayPlans = DayPlans();
 
@@ -44,6 +45,8 @@ void main() {
                 dayPlanToAdd: DayPlan(
                   title: "Test Day Plan",
                   isComplete: false,
+                  isTodayExpanded: false,
+                  notes: Notes(),
                 ),
               );
 
@@ -56,6 +59,8 @@ void main() {
                       'id': null,
                       'title': 'Test Day Plan',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![0]!.notes!.toJson(),
                     },
                   ],
                   'dayOfPlans': DateTime(
@@ -75,6 +80,8 @@ void main() {
                 dayPlanToAdd: DayPlan(
                   title: "Test Day Plan 2",
                   isComplete: false,
+                  isTodayExpanded: false,
+                  notes: Notes(),
                 ),
               );
 
@@ -87,11 +94,15 @@ void main() {
                       'id': null,
                       'title': 'Test Day Plan',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![0]!.notes!.toJson(),
                     },
                     {
                       'id': null,
                       'title': 'Test Day Plan 2',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![1]!.notes!.toJson(),
                     },
                   ],
                   'dayOfPlans': DateTime(
@@ -107,7 +118,7 @@ void main() {
       );
 
       group(
-        'DayPlans_DateTime_Passed',
+        'DateTime Passed',
         () {
           DayPlans? dayPlans = DayPlans(
             dayOfPlans: DateTime(
@@ -142,6 +153,8 @@ void main() {
                 dayPlanToAdd: DayPlan(
                   title: "Test Day Plan",
                   isComplete: false,
+                  isTodayExpanded: false,
+                  notes: Notes(),
                 ),
               );
 
@@ -154,6 +167,8 @@ void main() {
                       'id': null,
                       'title': 'Test Day Plan',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![0]!.notes!.toJson(),
                     },
                   ],
                   'dayOfPlans': DateTime(
@@ -173,6 +188,8 @@ void main() {
                 dayPlanToAdd: DayPlan(
                   title: "Test Day Plan 2",
                   isComplete: false,
+                  isTodayExpanded: false,
+                  notes: Notes(),
                 ),
               );
 
@@ -185,11 +202,15 @@ void main() {
                       'id': null,
                       'title': 'Test Day Plan',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![0]!.notes!.toJson(),
                     },
                     {
                       'id': null,
                       'title': 'Test Day Plan 2',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![1]!.notes!.toJson(),
                     },
                   ],
                   'dayOfPlans': DateTime(
@@ -250,6 +271,7 @@ void main() {
             dayPlanToAdd: DayPlan(
               title: "Test Day Plan",
               isComplete: false,
+              isTodayExpanded: false,
             ),
           );
 
@@ -262,6 +284,7 @@ void main() {
                     'id': null,
                     'title': 'Test Day Plan',
                     'isComplete': false,
+                    'isTodayExpanded': false,
                   }
                 ],
                 'dayOfPlans': DateTime.now().toIso8601String(),
@@ -281,6 +304,7 @@ void main() {
             dayPlanToAdd: DayPlan(
               title: "Test Day Plan",
               isComplete: false,
+              isTodayExpanded: false,
             ),
           );
 
@@ -288,6 +312,7 @@ void main() {
             dayPlanToAdd: DayPlan(
               title: "Test Day Plan 2",
               isComplete: false,
+              isTodayExpanded: false,
             ),
           );
 
@@ -300,11 +325,13 @@ void main() {
                     'id': null,
                     'title': 'Test Day Plan',
                     'isComplete': false,
+                    'isTodayExpanded': false,
                   },
                   {
                     'id': null,
                     'title': 'Test Day Plan 2',
                     'isComplete': false,
+                    'isTodayExpanded': false,
                   },
                 ],
                 'dayOfPlans': DateTime.now().toIso8601String(),
@@ -320,14 +347,13 @@ void main() {
   group(
     'DayPlans.fromDateOfPlans',
     () {
-      
       test(
         'DayPlans.fromDateOfPlans with null DayPlan',
         () async {
           SharedPreferences.setMockInitialValues(
             {
               'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                  (await JsonEncodeService.encode(
+                  (await JsonEncodeService.encodeDayPlans(
                 {
                   'id': null,
                   'dayOfPlans': DateTime.now().toIso8601String(),
@@ -389,13 +415,15 @@ void main() {
             dayPlanToAdd: DayPlan(
               title: "Test Day Plan",
               isComplete: false,
+              isTodayExpanded: false,
+              notes: Notes(),
             ),
           );
 
           SharedPreferences.setMockInitialValues(
             {
               'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                  (await JsonEncodeService.encode(
+                  (await JsonEncodeService.encodeDayPlans(
                 {
                   'id': null,
                   'dayPlansList': <Map<String?, dynamic>?>[
@@ -403,6 +431,11 @@ void main() {
                       'id': null,
                       'title': 'Test Day Plan',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': {
+                        'id': null,
+                        'notesList': [],
+                      },
                     },
                   ],
                   'dayOfPlans': DateTime.now().toIso8601String(),
@@ -410,6 +443,15 @@ void main() {
               ))!,
             },
           );
+
+          // SharedPreferences.setMockInitialValues(
+          //   {
+          //     'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
+          //         (await JsonEncodeService.encodeDayPlans(
+          //       dayPlans.toJson(),
+          //     ))!
+          //   },
+          // );
 
           expect(
             (await DayPlans.fromDateOfPlans(
@@ -430,6 +472,8 @@ void main() {
             dayPlanToAdd: DayPlan(
               title: "Test Day Plan",
               isComplete: false,
+              isTodayExpanded: false,
+              notes: Notes(),
             ),
           );
 
@@ -437,13 +481,15 @@ void main() {
             dayPlanToAdd: DayPlan(
               title: "Test Day Plan 2",
               isComplete: false,
+              isTodayExpanded: false,
+              notes: Notes(),
             ),
           );
 
           SharedPreferences.setMockInitialValues(
             {
               'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                  (await JsonEncodeService.encode(
+                  (await JsonEncodeService.encodeDayPlans(
                 {
                   'id': null,
                   'dayPlansList': [
@@ -451,11 +497,15 @@ void main() {
                       'id': null,
                       'title': 'Test Day Plan',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![0]!.notes!,
                     },
                     {
                       'id': null,
                       'title': 'Test Day Plan 2',
                       'isComplete': false,
+                      'isTodayExpanded': false,
+                      'notes': dayPlans.dayPlansList![1]!.notes!,
                     },
                   ],
                   'dayOfPlans': DateTime.now().toIso8601String(),

@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:grassroots_app/models/json/day_plan.dart';
-import 'package:grassroots_app/models/json/day_plans.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plan.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plans.dart';
 import 'package:grassroots_app/services/jsonService/json_decode_service.dart';
 import 'package:grassroots_app/models/dayPlan/day_plan.dart';
 
@@ -26,6 +26,7 @@ class DayPlans {
     required DayPlan? dayPlanToUpdate,
     String? newDayPlayTitle,
     bool? isComplete,
+    bool? isTodayExpanded,
   }) async {
     if (newDayPlayTitle != null) {
       dayPlanToUpdate!.title = newDayPlayTitle;
@@ -33,6 +34,10 @@ class DayPlans {
 
     if (isComplete != null) {
       dayPlanToUpdate!.isComplete = isComplete;
+    }
+
+    if (isTodayExpanded != null) {
+      dayPlanToUpdate!.isTodayExpanded = isTodayExpanded;
     }
   }
 
@@ -110,7 +115,7 @@ class DayPlans {
       (
         SharedPreferences? prefs,
       ) async {
-        jsonDayPlans = await JsonDecodeService.decode(
+        jsonDayPlans = await JsonDecodeService.decodeDayPlans(
           prefs!.getString(
             'dateOfPlans${dateOfPlans!.year}${dateOfPlans.month}${dateOfPlans.day}',
           )!,
@@ -146,6 +151,8 @@ class DayPlans {
             'id': json['dayPlansList'][i].id,
             'title': json['dayPlansList'][i].title,
             'isComplete': json['dayPlansList'][i].isComplete,
+            'isTodayExpanded': json['dayPlansList'][i].isTodayExpanded,
+            'notes': json['dayPlansList'][i].notes,
           };
         }
 
@@ -155,6 +162,8 @@ class DayPlans {
               'id': json?['dayPlansList'][i]['id'],
               'title': json?['dayPlansList'][i]['title'],
               'isComplete': json?['dayPlansList'][i]['isComplete'],
+              'isTodayExpanded': json?['dayPlansList'][i]['isTodayExpanded'],
+              'notes': json?['dayPlansList'][i]['notes'],
             },
           ),
         );

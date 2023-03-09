@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:grassroots_app/models/dayPlan/day_plan.dart';
 import 'package:grassroots_app/services/dayPlanService/day_plan_service.dart';
 import 'package:grassroots_app/universals/variables.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class GrassrootsTodayAddDayPlan extends StatefulWidget {
   const GrassrootsTodayAddDayPlan({
@@ -85,6 +85,7 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                           content: const Text(
                             "You will lose any unsaved changes.",
                           ),
+                          actionsAlignment: MainAxisAlignment.center,
                           actions: [
                             ElevatedButton(
                               onPressed: () {
@@ -94,6 +95,49 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                               },
                               child: const Text(
                                 "No",
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                Navigator.pop(
+                                  context,
+                                );
+
+                                await DayPlanService.writeDayPlansToStorage();
+
+                                snapshot!.data!.reload();
+
+                                if (context.mounted) {}
+
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Day Plans Saved",
+                                    ),
+                                  ),
+                                );
+
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  '/home',
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(
+                                  context!,
+                                ).colorScheme.primary,
+                              ),
+                              child: Text(
+                                "Save & Return",
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                    ),
                               ),
                             ),
                             ElevatedButton(
@@ -109,7 +153,7 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Theme.of(
-                                  context!,
+                                  context,
                                 ).colorScheme.error,
                               ),
                               child: const Text(
@@ -196,10 +240,10 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                       ) =>
                           AlertDialog(
                         title: const Text(
-                          "Confirm",
+                          "Are you sure you want to delete this item?",
                         ),
                         content: const Text(
-                          "Are you sure you want to delete this item?",
+                          "All notes and moods associated with this day plan will be deleted.",
                         ),
                         actions: [
                           TextButton(
@@ -219,7 +263,7 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                               delete = true;
 
                               Navigator.of(
-                                context!,
+                                context,
                               ).pop();
 
                               snackBarController = ScaffoldMessenger.of(
@@ -236,8 +280,15 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                                 ),
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               "Yes",
+                              style: Theme.of(
+                                context!,
+                              ).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.error,
+                                  ),
                             ),
                           ),
                         ],
@@ -266,6 +317,8 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                         dayPlan: dayPlanToDelete,
                       );
 
+                      await DayPlanService.writeDayPlansToStorage();
+
                       setState(
                         () {},
                       );
@@ -282,6 +335,8 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                         ),
                       );
                     } else if (!delete!) {
+                      savedChanges = true;
+
                       setState(
                         () {
                           globalDayPlans!.dayPlansList!.insert(
@@ -332,8 +387,8 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                   Icons.check_rounded,
                 ),
                 label: "Save",
-                onTap: () {
-                  if (globalDayPlans!.dayPlansList!.isEmpty) {
+                onTap: () async {
+                  if (savedChanges! && globalDayPlans!.dayPlansList!.isEmpty) {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(
@@ -346,7 +401,9 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                   } else {
                     savedChanges = true;
 
-                    DayPlanService.writeDayPlansToStorage();
+                    await DayPlanService.writeDayPlansToStorage();
+
+                    if (context.mounted) {}
 
                     ScaffoldMessenger.of(
                       context,
@@ -422,6 +479,7 @@ class _GrassrootsTodayAddDayPlanState extends State<GrassrootsTodayAddDayPlan> {
                                 DayPlan(
                                   title: dayPlanNameController!.text,
                                   isComplete: false,
+                                  isTodayExpanded: false,
                                 ),
                               );
 

@@ -273,6 +273,13 @@ class _GrassrootsSettingsState extends State<GrassrootsSettings> {
                               context,
                             );
 
+                            Navigator.popUntil(
+                              context,
+                              ModalRoute.withName(
+                                '/today',
+                              ),
+                            );
+
                             Navigator.pushReplacementNamed(
                               context,
                               '/welcome',
@@ -350,6 +357,9 @@ class _GrassrootsSettingsState extends State<GrassrootsSettings> {
                               },
                             );
 
+                            globalDayPlans = null;
+                            dayPlanDates = null;
+
                             await FirebaseAuth.instance.signOut();
 
                             AuthService().signOut();
@@ -360,9 +370,107 @@ class _GrassrootsSettingsState extends State<GrassrootsSettings> {
                               context,
                             );
 
+                            Navigator.popUntil(
+                              context,
+                              ModalRoute.withName(
+                                '/today',
+                              ),
+                            );
+
                             Navigator.pushReplacementNamed(
                               context,
                               '/welcome',
+                            );
+                          },
+                          child: Text(
+                            "Reset",
+                            style: Theme.of(
+                              context!,
+                            ).textTheme.bodyMedium!.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.error,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Card(
+              child: ListTile(
+                leading: Icon(
+                  Icons.delete,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.error,
+                ),
+                title: Text(
+                  "Reset All Shared Preferences",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.error,
+                      ),
+                ),
+                onTap: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (
+                      BuildContext? context,
+                    ) =>
+                        AlertDialog(
+                      title: const Text(
+                        "Reset All Shared Preferences",
+                      ),
+                      content: const Text(
+                        "Are you sure you want to reset all shared preferences?",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(
+                              context!,
+                            );
+                          },
+                          child: const Text(
+                            "Cancel",
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await SharedPreferences.getInstance().then(
+                              (
+                                SharedPreferences? prefs,
+                              ) async {
+                                await prefs!.clear();
+                              },
+                            );
+
+                            globalDayPlans = null;
+                            dayPlanDates = null;
+
+                            if (context.mounted) {}
+
+                            Navigator.pop(
+                              context,
+                            );
+
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "All shared preferences have been reset.",
+                                ),
+                              ),
                             );
                           },
                           child: Text(
