@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grassroots_app/models/dayPlan/notes/notes.dart';
 
-import 'package:grassroots_app/models/json/day_plans.dart';
-import 'package:grassroots_app/models/json/day_plan.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plans.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plan.dart';
+import 'package:grassroots_app/models/json/dayPlan/notes/notes.dart';
 
 void main() {
   group(
@@ -33,6 +35,10 @@ void main() {
             JsonDayPlan(
               title: 'Test Day Plan',
               isComplete: false,
+              isTodayExpanded: false,
+              notes: JsonNotes(
+                jsonNotesList: [],
+              ),
             ),
           );
 
@@ -45,6 +51,8 @@ void main() {
                   'id': null,
                   'title': 'Test Day Plan',
                   'isComplete': false,
+                  'isTodayExpanded': false,
+                  'notes': jsonDayPlans.dayPlansList!.first!.notes!.toJson(),
                 },
               ],
               'dayOfPlans': jsonDayPlans.dayOfPlans,
@@ -60,6 +68,10 @@ void main() {
             JsonDayPlan(
               title: 'Test Day Plan 2',
               isComplete: true,
+              isTodayExpanded: false,
+              notes: JsonNotes(
+                jsonNotesList: [],
+              ),
             ),
           );
 
@@ -72,11 +84,15 @@ void main() {
                   'id': null,
                   'title': 'Test Day Plan',
                   'isComplete': false,
+                  'isTodayExpanded': false,
+                  'notes': jsonDayPlans.dayPlansList!.first!.notes!.toJson(),
                 },
                 {
                   'id': null,
                   'title': 'Test Day Plan 2',
                   'isComplete': true,
+                  'isTodayExpanded': false,
+                  'notes': jsonDayPlans.dayPlansList!.last!.notes!.toJson(),
                 },
               ],
               'dayOfPlans': jsonDayPlans.dayOfPlans,
@@ -123,6 +139,8 @@ void main() {
                   'id': null,
                   'title': 'Test Day Plan',
                   'isComplete': false,
+                  'isTodayExpanded': false,
+                  'notes': Notes().toJson(),
                 },
               ],
               'dayOfPlans': DateTime.now(),
@@ -138,6 +156,8 @@ void main() {
                   'id': null,
                   'title': 'Test Day Plan',
                   'isComplete': false,
+                  'isTodayExpanded': false,
+                  'notes': jsonDayPlans.dayPlansList!.first!.notes!.toJson(),
                 },
               ],
               'dayOfPlans': jsonDayPlans.dayOfPlans,
@@ -157,11 +177,15 @@ void main() {
                   'id': null,
                   'title': 'Test Day Plan',
                   'isComplete': false,
+                  'isTodayExpanded': false,
+                  'notes': Notes().toJson(),
                 },
                 {
                   'id': null,
                   'title': 'Test Day Plan 2',
                   'isComplete': true,
+                  'isTodayExpanded': false,
+                  'notes': Notes().toJson(),
                 },
               ],
               'dayOfPlans': DateTime.now(),
@@ -177,11 +201,15 @@ void main() {
                   'id': null,
                   'title': 'Test Day Plan',
                   'isComplete': false,
+                  'isTodayExpanded': false,
+                  'notes': jsonDayPlans.dayPlansList!.first!.notes!.toJson(),
                 },
                 {
                   'id': null,
                   'title': 'Test Day Plan 2',
                   'isComplete': true,
+                  'isTodayExpanded': false,
+                  'notes': jsonDayPlans.dayPlansList!.last!.notes!.toJson(),
                 },
               ],
               'dayOfPlans': jsonDayPlans.dayOfPlans,

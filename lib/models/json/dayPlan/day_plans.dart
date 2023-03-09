@@ -1,4 +1,4 @@
-import 'package:grassroots_app/models/json/day_plan.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plan.dart';
 
 class JsonDayPlans {
   String? get id => _id;

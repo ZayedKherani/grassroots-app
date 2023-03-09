@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grassroots_app/models/json/dayPlan/notes/notes.dart';
 
-import 'package:grassroots_app/models/json/day_plan.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plan.dart';
 
 void main() {
   test(
@@ -9,6 +10,10 @@ void main() {
       final JsonDayPlan jsonDayPlan = JsonDayPlan(
         title: 'Test Day Plan',
         isComplete: false,
+        isTodayExpanded: false,
+        notes: JsonNotes(
+          jsonNotesList: [],
+        ),
       );
 
       final Map<String?, dynamic>? json = jsonDayPlan.toJson();
@@ -19,6 +24,8 @@ void main() {
           'id': null,
           'title': 'Test Day Plan',
           'isComplete': false,
+          'isTodayExpanded': false,
+          'notes': jsonDayPlan.notes!.toJson(),
         },
       );
     },

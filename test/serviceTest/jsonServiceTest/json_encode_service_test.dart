@@ -6,7 +6,7 @@ void main() {
     'should return null if json is null',
     () async {
       expect(
-        await JsonEncodeService.encode(
+        await JsonEncodeService.encodeDayPlans(
           null,
         ),
         null,
@@ -18,7 +18,7 @@ void main() {
     'should return null if json is empty',
     () async {
       expect(
-        await JsonEncodeService.encode(
+        await JsonEncodeService.encodeDayPlans(
           {},
         ),
         null,
@@ -30,7 +30,7 @@ void main() {
     'should return jsonString if json is valid',
     () async {
       expect(
-        await JsonEncodeService.encode(
+        await JsonEncodeService.encodeDayPlans(
           {
             'id': '1',
             'dayOfPlans': '2021-01-01',

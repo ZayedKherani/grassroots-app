@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +40,7 @@ void main() {
         dayPlan: DayPlan(
           title: 'Test Day Plan',
           isComplete: false,
+          isTodayExpanded: false,
         ),
       );
 
@@ -65,6 +64,7 @@ void main() {
         dayPlanToAdd: DayPlan(
           title: 'Test Day Plan',
           isComplete: false,
+          isTodayExpanded: false,
         ),
       );
 
@@ -107,6 +107,7 @@ void main() {
                 dayPlan: DayPlan(
                   title: 'Test Day Plan',
                   isComplete: false,
+                  isTodayExpanded: false,
                 ),
               );
 
@@ -114,6 +115,7 @@ void main() {
                 dayPlan: DayPlan(
                   title: 'Test Day Plan 2',
                   isComplete: false,
+                  isTodayExpanded: false,
                 ),
               );
 
@@ -145,6 +147,7 @@ void main() {
                 dayPlan: DayPlan(
                   title: 'Test Day Plan',
                   isComplete: false,
+                  isTodayExpanded: false,
                 ),
               );
 
@@ -152,6 +155,7 @@ void main() {
                 dayPlan: DayPlan(
                   title: 'Test Day Plan 2',
                   isComplete: false,
+                  isTodayExpanded: false,
                 ),
               );
 
@@ -184,6 +188,7 @@ void main() {
                   id: '1234',
                   title: 'Test Day Plan',
                   isComplete: false,
+                  isTodayExpanded: false,
                 ),
               );
 
@@ -192,6 +197,7 @@ void main() {
                   id: '5678',
                   title: 'Test Day Plan 2',
                   isComplete: false,
+                  isTodayExpanded: false,
                 ),
               );
 
@@ -223,7 +229,7 @@ void main() {
               SharedPreferences.setMockInitialValues(
                 {
                   'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                      (await JsonEncodeService.encode(
+                      (await JsonEncodeService.encodeDayPlans(
                     {
                       'id': null,
                       'dayPlansList': [
@@ -231,11 +237,13 @@ void main() {
                           'id': '1234',
                           'title': 'Test Day Plan',
                           'isComplete': false,
+                          'isTodayExpanded': false,
                         },
                         {
                           'id': '5678',
                           'title': 'Test Day Plan 2',
                           'isComplete': false,
+                          'isTodayExpanded': false,
                         },
                       ],
                       'dayOfPlans': DateTime.now().toIso8601String(),
@@ -273,7 +281,7 @@ void main() {
               SharedPreferences.setMockInitialValues(
                 {
                   'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                      (await JsonEncodeService.encode(
+                      (await JsonEncodeService.encodeDayPlans(
                     {
                       'id': null,
                       'dayPlansList': [
@@ -281,11 +289,13 @@ void main() {
                           'id': '1234',
                           'title': 'Test Day Plan',
                           'isComplete': false,
+                          'isTodayExpanded': false,
                         },
                         {
                           'id': '5678',
                           'title': 'Test Day Plan 2',
                           'isComplete': false,
+                          'isTodayExpanded': false,
                         },
                       ],
                       'dayOfPlans': DateTime.now().toIso8601String(),
@@ -323,7 +333,7 @@ void main() {
               SharedPreferences.setMockInitialValues(
                 {
                   'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}':
-                      (await JsonEncodeService.encode(
+                      (await JsonEncodeService.encodeDayPlans(
                     {
                       'id': null,
                       'dayPlansList': [
@@ -331,11 +341,13 @@ void main() {
                           'id': '1234',
                           'title': 'Test Day Plan',
                           'isComplete': false,
+                          'isTodayExpanded': false,
                         },
                         {
                           'id': '5678',
                           'title': 'Test Day Plan 2',
                           'isComplete': false,
+                          'isTodayExpanded': false,
                         },
                       ],
                       'dayOfPlans': DateTime.now().toIso8601String(),
@@ -383,6 +395,7 @@ void main() {
           id: '1234',
           title: 'Test Day Plan',
           isComplete: false,
+          isTodayExpanded: false,
         ),
       );
 
@@ -392,6 +405,33 @@ void main() {
 
       expect(
         dayPlans.dayPlansList!.first!.isComplete,
+        true,
+      );
+    },
+  );
+
+  test(
+    'DayPlanService.toggleDayPlanTodayExpansion',
+    () async {
+      DayPlans? dayPlans = await DayPlanService.getDayPlans(
+        getFromStorage: false,
+      );
+
+      await DayPlanService.addDayPlan(
+        dayPlan: DayPlan(
+          id: '1234',
+          title: 'Test Day Plan',
+          isComplete: false,
+          isTodayExpanded: false,
+        ),
+      );
+
+      await DayPlanService.toggleDayPlanTodayExpansion(
+        dayPlan: dayPlans!.dayPlansList!.first,
+      );
+
+      expect(
+        dayPlans.dayPlansList!.first!.isTodayExpanded,
         true,
       );
     },
@@ -413,6 +453,7 @@ void main() {
           id: '1234',
           title: 'Test Day Plan',
           isComplete: false,
+          isTodayExpanded: false,
         ),
       );
 
@@ -459,7 +500,7 @@ void main() {
 
       expect(
         stringContainResult,
-        (await JsonEncodeService.encode(
+        (await JsonEncodeService.encodeDayPlans(
           {
             'id': null,
             'dayPlansList': [
@@ -467,6 +508,11 @@ void main() {
                 'id': '1234',
                 'title': 'Test Day Plan',
                 'isComplete': false,
+                'isTodayExpanded': false,
+                'notes': {
+                  'id': null,
+                  'notesList': [],
+                },
               },
             ],
             'dayOfPlans': dayPlans.dayOfPlans!.toIso8601String(),

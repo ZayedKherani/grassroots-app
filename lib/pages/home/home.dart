@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:grassroots_app/models/json/day_plan.dart';
-import 'package:grassroots_app/models/json/day_plans.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plan.dart';
+import 'package:grassroots_app/models/json/dayPlan/day_plans.dart';
 import 'package:grassroots_app/services/jsonService/json_decode_service.dart';
 import 'package:grassroots_app/models/dayPlan/day_plans.dart';
 import 'package:grassroots_app/pages/calendar/calendar.dart';
@@ -65,7 +65,8 @@ class _GrassrootsHomeState extends State<GrassrootsHome> {
                 },
               );
             } else {
-              JsonDayPlans? jsonDayPlans = await JsonDecodeService.decode(
+              JsonDayPlans? jsonDayPlans =
+                  await JsonDecodeService.decodeDayPlans(
                 prefs!.getString(
                   'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}',
                 )!,
