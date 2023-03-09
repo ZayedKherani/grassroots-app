@@ -1,23 +1,21 @@
-name: Test Cases
-on:
-  pull_request:
-    branches: [ main ]
-    types: [ closed ]
+name: Flutter Test
+
+on: [pull_request]
+
 jobs:
   Flutter-Test:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v1
-      
-    - name: Checkout Flutter-action
-      uses: subosito/flutter-action@v1
-      
-    - name: Run Tests
+    - uses: actions/checkout@v2
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Run tests
       run: flutter test
-    
-    - name: Merge Pull Request
-      if: ${{ github.event.pull_request.merged == true && success() }}
-      run: |
-          git merge --no-ff --no-commit ${{ github.event.pull_request.head.ref }}
