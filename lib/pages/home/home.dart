@@ -10,7 +10,6 @@ import 'package:grassroots_app/pages/calendar/calendar.dart';
 import 'package:grassroots_app/pages/notes/notes.dart';
 import 'package:grassroots_app/pages/support/support.dart';
 import 'package:grassroots_app/pages/today/today.dart';
-import 'package:grassroots_app/pages/settings/settings.dart';
 import 'package:grassroots_app/universals/variables.dart';
 
 class GrassrootsHome extends StatefulWidget {
@@ -27,10 +26,9 @@ class _GrassrootsHomeState extends State<GrassrootsHome> {
 
   static const List<Widget?> _pages = [
     GrassrootsToday(),
-    GrassrootsCalendar(),
     GrassrootsNotes(),
+    GrassrootsCalendar(),
     GrassrootsSupport(),
-    GrassrootsSettings(),
   ];
 
   int? _activePageIndex = 0;
@@ -54,9 +52,14 @@ class _GrassrootsHomeState extends State<GrassrootsHome> {
                   '2020-01-01T00:00:00.000000',
             );
 
-            if (isDayPlannedDateTime.year != DateTime.now().year &&
-                isDayPlannedDateTime.month != DateTime.now().month &&
+            if (isDayPlannedDateTime.year != DateTime.now().year ||
+                isDayPlannedDateTime.month != DateTime.now().month ||
                 isDayPlannedDateTime.day != DateTime.now().day) {
+              await prefs!.setBool(
+                'isDayPlanned',
+                false,
+              );
+
               setState(
                 () {
                   globalDayPlans = DayPlans(
@@ -135,15 +138,15 @@ class _GrassrootsHomeState extends State<GrassrootsHome> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.calendar_today,
-            ),
-            label: 'Calendar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
               Icons.notes,
             ),
             label: 'Notes',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.calendar_today,
+            ),
+            label: 'Calendar',
           ),
           BottomNavigationBarItem(
             icon: Icon(

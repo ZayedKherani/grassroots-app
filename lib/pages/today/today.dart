@@ -149,163 +149,165 @@ class _GrassrootsTodayState extends State<GrassrootsToday> {
           ],
         ),
       ),
-      body: Center(
-        child: Scrollbar(
-          interactive: true,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    10.0,
-                    0.0,
-                    10.0,
-                    0.0,
-                  ),
-                  child: FutureBuilder(
-                    future: SharedPreferences.getInstance(),
-                    builder: (
-                      BuildContext? context,
-                      AsyncSnapshot<SharedPreferences?>? snapshot,
-                    ) {
-                      if ((snapshot!.connectionState == ConnectionState.done ||
-                              snapshot.connectionState ==
-                                  ConnectionState.waiting ||
-                              snapshot.connectionState ==
-                                  ConnectionState.active) &&
-                          snapshot.hasData &&
-                          snapshot.data != null) {
-                        if (snapshot.data!.getBool(
-                                  'isDayPlanned',
-                                ) !=
-                                null &&
-                            snapshot.data!.getBool(
-                              'isDayPlanned',
-                            )!) {
-                          return ListTile(
-                            title: Text(
-                              "Here Are Your Plans For Today",
-                              style: Theme.of(
-                                context!,
-                              ).textTheme.titleLarge,
-                            ),
-                            trailing: PopupMenuButton(
-                              onSelected: (
-                                int? value,
-                              ) async {
-                                if (value == 1) {
-                                  await Navigator.pushReplacementNamed(
-                                    context,
-                                    "/today/add_day_plan",
-                                  );
-                                }
-                              },
-                              itemBuilder: (
-                                BuildContext? context,
-                              ) =>
-                                  [
-                                PopupMenuItem(
-                                  value: 1,
-                                  child: Text(
-                                    'Edit Day Plans',
-                                    style: Theme.of(
-                                      context!,
-                                    ).textTheme.bodyMedium!.copyWith(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.secondary,
-                                        ),
-                                  ),
+      body: Scrollbar(
+        interactive: true,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  10.0,
+                  0.0,
+                  10.0,
+                  0.0,
+                ),
+                child: FutureBuilder(
+                  future: SharedPreferences.getInstance(),
+                  builder: (
+                    BuildContext? context,
+                    AsyncSnapshot<SharedPreferences?>? snapshot,
+                  ) {
+                    if ((snapshot!.connectionState == ConnectionState.done ||
+                            snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            snapshot.connectionState ==
+                                ConnectionState.active) &&
+                        snapshot.hasData &&
+                        snapshot.data != null) {
+                      if (snapshot.data!.getBool(
+                                'isDayPlanned',
+                              ) !=
+                              null &&
+                          snapshot.data!.getBool(
+                            'isDayPlanned',
+                          )!) {
+                        return ListTile(
+                          title: Text(
+                            "Here Are Your Plans For Today",
+                            style: Theme.of(
+                              context!,
+                            ).textTheme.titleLarge,
+                          ),
+                          trailing: PopupMenuButton(
+                            onSelected: (
+                              int? value,
+                            ) async {
+                              if (value == 1) {
+                                await Navigator.pushReplacementNamed(
+                                  context,
+                                  "/today/add_day_plan",
+                                );
+                              }
+                            },
+                            itemBuilder: (
+                              BuildContext? context,
+                            ) =>
+                                [
+                              PopupMenuItem(
+                                value: 1,
+                                child: Text(
+                                  'Edit Day Plans',
+                                  style: Theme.of(
+                                    context!,
+                                  ).textTheme.bodyMedium!.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary,
+                                      ),
                                 ),
-                              ],
-                              elevation: 2,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              "You Haven't Planned Your Day Yet",
-                              style: Theme.of(
-                                context!,
-                              ).textTheme.titleLarge,
-                            ),
-                          );
-                        }
-                      } else if (snapshot.hasError) {
-                        return Text(
-                          snapshot.error.toString(),
+                              ),
+                            ],
+                            elevation: 2,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                          ),
                         );
                       } else {
-                        return const CircularProgressIndicator.adaptive();
+                        return Center(
+                          child: Text(
+                            "You Haven't Planned Your Day Yet",
+                            style: Theme.of(
+                              context!,
+                            ).textTheme.titleLarge,
+                          ),
+                        );
                       }
-                    },
-                  ),
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        snapshot.error.toString(),
+                      );
+                    } else {
+                      return const CircularProgressIndicator.adaptive();
+                    }
+                  },
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 0,
-                  child: FutureBuilder(
-                    future: SharedPreferences.getInstance(),
-                    builder: (
-                      BuildContext? context,
-                      AsyncSnapshot<SharedPreferences?>? snapshot,
-                    ) {
-                      if ((snapshot!.connectionState == ConnectionState.done ||
-                              snapshot.connectionState ==
-                                  ConnectionState.waiting ||
-                              snapshot.connectionState ==
-                                  ConnectionState.active) &&
-                          snapshot.hasData &&
-                          snapshot.data != null) {
-                        return Column(
-                          children: [
-                            () {
-                              if (snapshot.data!.getBool(
-                                        'isDayPlanned',
-                                      ) !=
-                                      null &&
-                                  snapshot.data!.getBool(
-                                    'isDayPlanned',
-                                  )!) {
-                                return Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    20.0,
-                                    0.0,
-                                    20.0,
-                                    0.0,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 0,
+                child: FutureBuilder(
+                  future: SharedPreferences.getInstance(),
+                  builder: (
+                    BuildContext? context,
+                    AsyncSnapshot<SharedPreferences?>? snapshot,
+                  ) {
+                    if ((snapshot!.connectionState == ConnectionState.done ||
+                            snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            snapshot.connectionState ==
+                                ConnectionState.active) &&
+                        snapshot.hasData &&
+                        snapshot.data != null) {
+                      return Column(
+                        children: [
+                          () {
+                            if (snapshot.data!.getBool(
+                                      'isDayPlanned',
+                                    ) !=
+                                    null &&
+                                snapshot.data!.getBool(
+                                  'isDayPlanned',
+                                )!) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  20.0,
+                                  0.0,
+                                  20.0,
+                                  0.0,
+                                ),
+                                child: StreamBuilder(
+                                  stream: Stream.fromIterable(
+                                    [globalDayPlans!],
                                   ),
-                                  child: StreamBuilder(
-                                    stream: Stream.fromIterable(
-                                      [globalDayPlans!],
-                                    ),
-                                    builder: (
-                                      BuildContext? context,
-                                      AsyncSnapshot<DayPlans?>? dayPlanSnapshot,
-                                    ) {
-                                      if (!dayPlanSnapshot!.hasData) {
-                                        return const CircularProgressIndicator
-                                            .adaptive();
-                                      }
+                                  builder: (
+                                    BuildContext? context,
+                                    AsyncSnapshot<DayPlans?>? dayPlanSnapshot,
+                                  ) {
+                                    if (!dayPlanSnapshot!.hasData) {
+                                      return const CircularProgressIndicator
+                                          .adaptive();
+                                    }
 
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: dayPlanSnapshot
-                                            .data!.dayPlansList!.length,
-                                        itemBuilder: (
-                                          BuildContext? context,
-                                          int? index,
-                                        ) {
-                                          return Hero(
-                                            tag: dayPlanSnapshot.data!
-                                                .dayPlansList![index!]!.title!,
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: dayPlanSnapshot
+                                          .data!.dayPlansList!.length,
+                                      itemBuilder: (
+                                        BuildContext? context,
+                                        int? index,
+                                      ) {
+                                        return Hero(
+                                          tag: dayPlanSnapshot.data!
+                                              .dayPlansList![index!]!.title!,
+                                          child: Material(
                                             child: GestureDetector(
                                               onLongPress: () {
                                                 setState(
@@ -399,7 +401,7 @@ class _GrassrootsTodayState extends State<GrassrootsToday> {
                                                                     onPressed:
                                                                         () {
                                                                       Navigator
-                                                                          .pushNamed(
+                                                                          .pushReplacementNamed(
                                                                         context,
                                                                         '/today/add_notes',
                                                                         arguments:
@@ -491,97 +493,97 @@ class _GrassrootsTodayState extends State<GrassrootsToday> {
                                                 ),
                                               ),
                                             ),
-                                          );
-                                        },
-                                      );
-                                    },
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            } else {
+                              return Card(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    await Navigator.pushReplacementNamed(
+                                      context!,
+                                      "/today/add_day_plan",
+                                    );
+                                  },
+                                  child: const Text(
+                                    "Plan Your Day",
                                   ),
-                                );
-                              } else {
-                                return Card(
-                                  child: TextButton(
-                                    onPressed: () async {
-                                      await Navigator.pushReplacementNamed(
-                                        context!,
-                                        "/today/add_day_plan",
-                                      );
-                                    },
-                                    child: const Text(
-                                      "Plan Your Day",
-                                    ),
-                                  ),
-                                );
-                              }
-                            }(),
-                            const SizedBox(
-                              height: 20,
+                                ),
+                              );
+                            }
+                          }(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            snapshot.data!
+                                .getBool(
+                                  'isDayPlanned',
+                                )
+                                .toString(),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            snapshot.data!
+                                .getString(
+                                  'isDayPlannedDateTime',
+                                )
+                                .toString(),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            snapshot.data!
+                                .getString(
+                                  'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}',
+                                )
+                                .toString(),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            globalDayPlans != null
+                                ? globalDayPlans!.toJson().toString()
+                                : 'null global day plans',
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            snapshot.data!
+                                .getStringList(
+                                  'dayPlanDates',
+                                )
+                                .toString(),
+                          ),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        "An Error has Occurred Please Report the Error and Try Again Later: ${snapshot.error}, ",
+                        style: Theme.of(
+                          context!,
+                        ).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.error,
                             ),
-                            Text(
-                              snapshot.data!
-                                  .getBool(
-                                    'isDayPlanned',
-                                  )
-                                  .toString(),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              snapshot.data!
-                                  .getString(
-                                    'isDayPlannedDateTime',
-                                  )
-                                  .toString(),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              snapshot.data!
-                                  .getString(
-                                    'dateOfPlans${DateTime.now().year}${DateTime.now().month}${DateTime.now().day}',
-                                  )
-                                  .toString(),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              globalDayPlans != null
-                                  ? globalDayPlans!.toJson().toString()
-                                  : 'null global day plans',
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              snapshot.data!
-                                  .getStringList(
-                                    'dayPlanDates',
-                                  )
-                                  .toString(),
-                            ),
-                          ],
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text(
-                          "An Error has Occurred Please Report the Error and Try Again Later: ${snapshot.error}, ",
-                          style: Theme.of(
-                            context!,
-                          ).textTheme.bodyMedium!.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.error,
-                              ),
-                        );
-                      } else {
-                        return const CircularProgressIndicator.adaptive();
-                      }
-                    },
-                  ),
+                      );
+                    } else {
+                      return const CircularProgressIndicator.adaptive();
+                    }
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
